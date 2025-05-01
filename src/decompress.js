@@ -47,7 +47,7 @@ const decompress = (raf) => {
 	// loop until the end of the file is reached
 	while (raf.getPos() < raf.getLength()) {
 		// block size may be negative
-		const size = Math.abs(raf.readInt());
+		const size = Math.abs(raf.readSInt4());
 		// store the position
 		positions.push({
 			pos: raf.getPos(),

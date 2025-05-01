@@ -107,6 +107,20 @@ class RandomAccessFile {
 	}
 
 	/**
+	 * Read a 4-byte signed integer from the buffer
+	 *
+	 * @category Data
+	 * @returns {number}
+	 */
+	readSInt4() {
+		const int = this.readSignedIntLocal(this.offset, 4);
+		this.offset += 4;
+
+		return int;
+	}
+
+
+	/**
 	 * Read a 2-byte unsigned integer from the buffer
 	 *
 	 * @category Data
