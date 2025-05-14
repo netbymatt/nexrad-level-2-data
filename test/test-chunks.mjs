@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const fs = require('fs');
-const glob = require('glob');
-const { Level2Radar } = require('../src');
+import fs from 'fs';
+import { glob } from 'glob';
+import { Level2Radar } from '../src/index.mjs';
 
 // const files = [
 // 	// './data/chunks/230/20210729-123848-001-S',

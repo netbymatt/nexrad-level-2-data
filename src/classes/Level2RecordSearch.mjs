@@ -46,7 +46,7 @@ const search = (raf, date, options) => {
 	// not found, return false
 	return false;
 };
-
-module.exports = {
+export default level2RecordSearch;
+export {
 	level2RecordSearch,
 };

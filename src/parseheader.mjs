@@ -1,4 +1,4 @@
-const { FILE_HEADER_SIZE } = require('./constants');
+import { FILE_HEADER_SIZE } from './constants.mjs';
 
 const parse = (raf) => {
 	// check for fixed 'AR2V00' value
@@ -21,4 +21,4 @@ const parse = (raf) => {
 	return {};
 };
 
-module.exports = parse;
+export default parse;

@@ -13,6 +13,7 @@
 		"NOAA",
 		"nyquist",
 		"rsbs",
-		"tover"
+		"tover",
+		"gzipdecompress"
 	]
 }

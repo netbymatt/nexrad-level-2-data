@@ -1,0 +1,89 @@
+// decompress a nexrad level 2 archive, or return the provided file if it is not compressed
+
+// bzip
+import bzip from 'seek-bzip';
+
+// gzip
+import gzipDecompress from './gzipdecompress.mjs';
+
+// structured byte access
+import { RandomAccessFile, BIG_ENDIAN } from './classes/RandomAccessFile.mjs';
+
+// constants
+import { FILE_HEADER_SIZE } from './constants.mjs';
+
+const decompress = (raf) => {
+	// detect gzip header
+	const gZipHeader = raf.read(2);
+	raf.seek(0);
+	if (gZipHeader[0] === 31 && gZipHeader[1] === 139) return gzipDecompress(raf);
+
+	// if file length is less than or equal to the file header size then it is not compressed
+	if (raf.getLength() <= FILE_HEADER_SIZE) return raf;
+	let headerSize = 0;
+	// get the compression record
+	const compressionRecord = readCompressionHeader(raf);
+
+	// test for the magic number 'BZh' for a bzip compressed file
+	if (compressionRecord.header !== 'BZh') {
+		// not compressed, try again with after skipping the file header (first chunk or complete archive)
+		raf.seek(0);
+		raf.skip(FILE_HEADER_SIZE);
+		headerSize = FILE_HEADER_SIZE;
+		const fullCompressionRecord = readCompressionHeader(raf);
+		if (fullCompressionRecord.header !== 'BZh') {
+			// not compressed in either form, return the original file at the begining
+			raf.seek(0);
+			return raf;
+		}
+	}
+	// compressed file, start decompressing
+	// the format is (int) size of block + 'BZh9' + compressed data block, repeat
+	// start by locating the begining of each compressed block by jumping to each offset noted by the size header
+	const positions = [];
+	// jump back before the first detected compression header
+	raf.seek(raf.getPos() - 8);
+
+	// loop until the end of the file is reached
+	while (raf.getPos() < raf.getLength()) {
+		// block size may be negative
+		const size = Math.abs(raf.readSInt4());
+		// store the position
+		positions.push({
+			pos: raf.getPos(),
+			size,
+		});
+		// jump forward
+		raf.seek(raf.getPos() + size);
+	}
+
+	// reuse the original header if present
+	const outArrays = [raf.array.slice(0, headerSize)];
+
+	// loop through each block and decompress it
+	positions.forEach((block) => {
+		// extract the block from the array
+		const compressed = raf.array.slice(block.pos, block.pos + block.size);
+		const output = bzip.decodeBlock(compressed, 32); // skip 32 bits 'BZh9' header
+		outArrays.push(output);
+	});
+
+	// combine the arrays
+	const outArray = new Uint8Array(outArrays.reduce((sum, cur) => sum + cur.length, 0));
+	outArrays.reduce((offset, currentArray) => {
+		outArray.set(currentArray, offset);
+		return offset + currentArray.length;
+	}, 0);
+
+	// pass the array to RandomAccessFile and return the result
+	return new RandomAccessFile(outArray, BIG_ENDIAN);
+};
+
+// compression header is (int) size of block + 'BZh' + one character block size
+const readCompressionHeader = (raf) => ({
+	size: raf.readInt(),
+	header: raf.readString(3),
+	block_size: raf.readString(1),
+});
+
+export default decompress;

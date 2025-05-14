@@ -28,7 +28,7 @@ const combine = (...args) => {
 		// combine data elements
 		if (raw.data) {
 			raw.listElevations().forEach((elev) => {
-			// set up initial array
+				// set up initial array
 				if (output.data[elev] === undefined) output.data[elev] = [];
 				output.data[elev].push(...raw.data[elev]);
 			});
@@ -38,4 +38,4 @@ const combine = (...args) => {
 	return output;
 };
 
-module.exports = combine;
+export default combine;
