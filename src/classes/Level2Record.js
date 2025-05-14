@@ -11,7 +11,6 @@ const { level2RecordSearch } = require('./Level2RecordSearch');
 
 /**
  * Read a single record from the radar data
- *
  * @class Level2Record
  * @param {RandomAccessFile} raf Random access file
  * @param {number} record Record number
@@ -27,7 +26,7 @@ const Level2Record = (raf, record, message31Offset, header, options) => {
 
 	const recordOffset = record * RADAR_DATA_SIZE + headerSize + message31Offset;
 
-	// passed the buffer, finished reading the file
+	// passed the array, finished reading the file
 	if (recordOffset >= raf.getLength()) return { finished: true };
 
 	// return the current record data
@@ -61,12 +60,12 @@ const getRecord = (raf, recordOffset, options) => {
 	};
 
 	switch (message.message_type) {
-	case 31: return parseMessage31(raf, message, recordOffset, options);
-	case 1: return parseMessage1(raf, message, options);
-	case 2: return parseMessage2(raf, message);
-	case 5:
-	case 7: return parseMessage5(raf, message);
-	default: return false;
+		case 31: return parseMessage31(raf, message, recordOffset, options);
+		case 1: return parseMessage1(raf, message, options);
+		case 2: return parseMessage2(raf, message);
+		case 5:
+		case 7: return parseMessage5(raf, message);
+		default: return false;
 	}
 };
 

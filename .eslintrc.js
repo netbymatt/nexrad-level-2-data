@@ -16,9 +16,30 @@ module.exports = {
 		ecmaVersion: 2020,
 	},
 	rules: {
+		'no-restricted-globals': [
+			'error',
+			{
+				name: 'Buffer',
+				message: 'Use Uint8Array instead.',
+			},
+		],
+		'no-restricted-imports': [
+			'error',
+			{
+				name: 'buffer',
+				message: 'Use Uint8Array instead.',
+			},
+			{
+				name: 'node:buffer',
+				message: 'Use Uint8Array instead.',
+			},
+		],
 		indent: [
 			'error',
 			'tab',
+			{
+				SwitchCase: 1,
+			},
 		],
 		'no-use-before-define': [
 			'error',

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const fs = require('fs');
 const glob = require('glob');
-const { Level2Radar } = require('./src');
+const { Level2Radar } = require('../src');
 
 // const files = [
 // 	// './data/chunks/230/20210729-123848-001-S',
@@ -40,3 +40,4 @@ files.forEach((fileToLoad) => {
 const full = Level2Radar.combineData(chunks);
 
 console.log(full);
+fs.writeFileSync('test/output/test-chunks.json', JSON.stringify(chunks[1], null, 2));

@@ -58,21 +58,25 @@ const decompress = (raf) => {
 	}
 
 	// reuse the original header if present
-	const outBuffers = [raf.buffer.slice(0, headerSize)];
+	const outArrays = [raf.array.slice(0, headerSize)];
 
 	// loop through each block and decompress it
 	positions.forEach((block) => {
-		// extract the block from the buffer
-		const compressed = raf.buffer.slice(block.pos, block.pos + block.size);
+		// extract the block from the array
+		const compressed = raf.array.slice(block.pos, block.pos + block.size);
 		const output = bzip.decodeBlock(compressed, 32); // skip 32 bits 'BZh9' header
-		outBuffers.push(output);
+		outArrays.push(output);
 	});
 
-	// combine the buffers
-	const outBuffer = Buffer.concat(outBuffers);
+	// combine the arrays
+	const outArray = new Uint8Array(outArrays.reduce((sum, cur) => sum + cur.length, 0));
+	outArrays.reduce((offset, currentArray) => {
+		outArray.set(currentArray, offset);
+		return offset + currentArray.length;
+	}, 0);
 
-	// pass the buffer to RandomAccessFile and return the result
-	return new RandomAccessFile(outBuffer, BIG_ENDIAN);
+	// pass the array to RandomAccessFile and return the result
+	return new RandomAccessFile(outArray, BIG_ENDIAN);
 };
 
 // compression header is (int) size of block + 'BZh' + one character block size

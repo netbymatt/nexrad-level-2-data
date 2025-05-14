@@ -18,7 +18,7 @@ const level2RecordSearch = (raf, startPos, julianDate, options) => {
 
 const search = (raf, date, options) => {
 	// calculate end of file after subtracting our search bytes
-	const endOfFile = raf.buffer.length - 10;
+	const endOfFile = raf.array.length - 10;
 	const found = false;
 	// search until the end of the file or the data we're looking for is found
 	while (!found && raf.getPos() < endOfFile) {

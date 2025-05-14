@@ -12,7 +12,7 @@
  * @property {number} control_flags
  * @property {number} data_size
  * @property {string} name 'REF', 'VEL', 'SW ', 'ZDR', 'PHI', 'RHO'
- * @property {Buffer[]} spare Spare data per the documentation
+ * @property {Uint8Array[]} spare Spare data per the documentation
  * @property {number[]} moment_data Scaled data
  */
 
@@ -84,7 +84,7 @@
  * @property {string} ICAO Radar site identifier
  * @property {number} milliseconds Milliseconds since midnight
  * @property {number} modified_julian_date Days since Dec 31, 1969
- * @property {Buffer} raw Raw header from file
+ * @property {Uint8Array} raw Raw header from file
  * @property {string} version Version number
  */
 

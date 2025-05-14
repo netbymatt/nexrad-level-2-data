@@ -86,20 +86,20 @@ module.exports = (raf, message, offset, options) => {
 
 			// length check
 			if (dbp[i] < messageSizeBytes) {
-			// get the record based on known block names
+				// get the record based on known block names
 				let thisRecord = false;
 				switch (name) {
-				case 'VOL':
-					thisRecord = parseVolumeData(raf);
-					break;
-				case 'ELV':
-					thisRecord = parseElevationData(raf);
-					break;
-				case 'RAD':
-					thisRecord = parseRadialData(raf);
-					break;
-				default:
-					thisRecord = parseMomentData(raf);
+					case 'VOL':
+						thisRecord = parseVolumeData(raf);
+						break;
+					case 'ELV':
+						thisRecord = parseElevationData(raf);
+						break;
+					case 'RAD':
+						thisRecord = parseRadialData(raf);
+						break;
+					default:
+						thisRecord = parseMomentData(raf);
 				}
 				// store returned value for validation checking on next block
 				prevRecord = thisRecord;
@@ -133,8 +133,8 @@ module.exports = (raf, message, offset, options) => {
  * from the data blocks. Then save that data
  * to the record.volume Object
  * See page 114; Section "Data Block #1" https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/RDA_RPG_2620002P.pdf
- *
- * @param raf
+ * @param {RandomAccessFile} raf The data as a RandomAccessFile
+ * @returns {object} Formatted volume data
  */
 const parseVolumeData = (raf) => ({
 	block_type: raf.readString(1),
@@ -161,8 +161,8 @@ const parseVolumeData = (raf) => ({
  * from the data blocks. Then save that data
  * to the record.elevation Object
  * See page 114; Section "Data Block #2" https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/RDA_RPG_2620002P.pdf
- *
- * @param raf
+ * @param {RandomAccessFile} raf The data as a RandomAccessFile
+ * @returns {object} Formatted elevation data
  */
 const parseElevationData = (raf) => ({
 	block_type: raf.readString(1),
@@ -177,8 +177,8 @@ const parseElevationData = (raf) => ({
  * from the data blocks. Then save that data
  * to the record.radial Object
  * See page 115; Section "Data Block #3" https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/RDA_RPG_2620002P.pdf
- *
- * @param raf
+ * @param {RandomAccessFile} raf The data as a RandomAccessFile
+ * @returns {object} Formatted radial data
  */
 const parseRadialData = (raf) => ({
 	block_type: raf.readString(1),
@@ -199,8 +199,8 @@ const parseRadialData = (raf) => ({
  * to the record.(reflect|velocity|spectrum|zdr|phi|rho)
  * Object base on what type being parsed
  * See page 115-117; Section "Data Block #4-9" https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/RDA_RPG_2620002P.pdf
- *
- * @param raf
+ * @param {RandomAccessFile} raf The data as a RandomAccessFile
+ * @returns {object} Formatted moment data
  */
 const parseMomentData = (raf) => {
 	// initial offset for moment data

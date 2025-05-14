@@ -3,53 +3,58 @@ const LITTLE_ENDIAN = 1;
 
 class RandomAccessFile {
 	/**
-	 * Store a buffer or string and add functionality for random access
+	 * Store a array or string and add functionality for random access
 	 * Unless otherwise noted all read functions advance the file's pointer by the length of the data read
-	 *
-	 * @param {Buffer|string} file A file as a string or Buffer to load for random access
+	 * @param {Uint8Array|string} file A file as a string or Uint8Array to load for random access
 	 * @param {number} endian Endianess of the file constants BIG_ENDIAN and LITTLE_ENDIAN are provided
 	 */
 	constructor(file, endian = BIG_ENDIAN) {
 		this.offset = 0;
-		this.buffer = null;
+		this.array = null;
 
 		// set the binary endian order
 		if (endian < 0) return;
 		this.bigEndian = (endian === BIG_ENDIAN);
 
-		// string to buffer if string was provided
+		// string to array if string was provided
 		if (typeof file === 'string') {
-			this.buffer = Buffer.from(file, 'binary');
+			const encoder = new TextEncoder();
+			this.array = encoder.encode(file);
 		} else {
-			// load the buffer directly
-			this.buffer = file;
+			// load the array directly
+			this.array = file;
 		}
 
 		// set up local read functions so we don't constantly query endianess
-		if (this.bigEndian) {
-			this.readFloatLocal = this.buffer.readFloatBE.bind(this.buffer);
-			this.readIntLocal = this.buffer.readUIntBE.bind(this.buffer);
-			this.readSignedIntLocal = this.buffer.readIntBE.bind(this.buffer);
-		}	else {
-			this.readFloatLocal = this.buffer.readFloatLE.bind(this.buffer);
-			this.readIntLocal = this.buffer.readUIntLE.bind(this.buffer);
-			this.readSignedIntLocal = this.buffer.readIntLE.bind(this.buffer);
-		}
+		const outerView = new DataView(file.buffer);
+		this.readFloatLocal = (offset) => outerView.getFloat32(offset, false);
+		this.readIntLocal = (offset, byteLength) => {
+			if (byteLength === 1) { return outerView.getUint8(offset); }
+			if (byteLength === 2) { return outerView.getUint16(offset, !this.bigEndian); }
+			if (byteLength === 4) { return outerView.getUint32(offset, !this.bigEndian); }
+			throw new Error('Unsupported byteLength', byteLength);
+		};
+		this.readSignedIntLocal = (offset, byteLength) => {
+			if (byteLength === 1) { return outerView.getInt8(offset); }
+			if (byteLength === 2) { return outerView.getInt16(offset, !this.bigEndian); }
+			if (byteLength === 4) { return outerView.getInt32(offset, !this.bigEndian); }
+			throw new Error('Unsupported byteLength', byteLength);
+		};
+		const decoder = new TextDecoder();
+		this.readStringLocal = (offset, byteLength) => decoder.decode(this.array.slice(offset, offset + byteLength));
 	}
 
 	/**
-	 * Get buffer length
-	 *
+	 * Get array length
 	 * @category Positioning
 	 * @returns {number}
 	 */
 	getLength() {
-		return this.buffer.length;
+		return this.array.length;
 	}
 
 	/**
 	 * Get current position in the file
-	 *
 	 * @category Positioning
 	 * @returns {number}
 	 */
@@ -58,8 +63,7 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Seek to a provided buffer offset
-	 *
+	 * Seek to a provided array offset
 	 * @category Positioning
 	 * @param {number} position Byte offset
 	 */
@@ -68,21 +72,20 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Read a string of a specificed length from the buffer
-	 *
+	 * Read a string of a specificed length from the array
 	 * @category Data
 	 * @param {number} length Length of string to read
 	 * @returns {string}
 	 */
 	readString(length) {
-		const data = this.buffer.toString('utf-8', this.offset, (this.offset += length));
+		const data = this.readStringLocal(this.offset, length);
+		this.offset += length;
 
 		return data;
 	}
 
 	/**
-	 * Read a float from the buffer
-	 *
+	 * Read a float from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -94,8 +97,7 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Read a 4-byte unsigned integer from the buffer
-	 *
+	 * Read a 4-byte unsigned integer from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -107,8 +109,7 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Read a 4-byte signed integer from the buffer
-	 *
+	 * Read a 4-byte signed integer from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -119,10 +120,8 @@ class RandomAccessFile {
 		return int;
 	}
 
-
 	/**
-	 * Read a 2-byte unsigned integer from the buffer
-	 *
+	 * Read a 2-byte unsigned integer from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -134,8 +133,7 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Read a 2-byte signed integer from the buffer
-	 *
+	 * Read a 2-byte signed integer from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -147,8 +145,7 @@ class RandomAccessFile {
 	}
 
 	/**
-	 * Read a single byte from the buffer
-	 *
+	 * Read a single byte from the array
 	 * @category Data
 	 * @returns {number}
 	 */
@@ -156,10 +153,9 @@ class RandomAccessFile {
 		return this.read();
 	}
 
-	// read a set number of bytes from the buffer
+	// read a set number of bytes from the array
 	/**
-	 * Read a set number of bytes from the buffer
-	 *
+	 * Read a set number of bytes from the array
 	 * @category Data
 	 * @param {number} length Number of bytes to read
 	 * @returns {number|number[]} number if length = 1, otherwise number[]
@@ -167,10 +163,10 @@ class RandomAccessFile {
 	read(length = 1) {
 		let data = null;
 		if (length > 1) {
-			data = this.buffer.slice(this.offset, this.offset + length);
+			data = this.array.slice(this.offset, this.offset + length);
 			this.offset += length;
 		} else {
-			data = this.buffer[this.offset];
+			data = this.array[this.offset];
 			this.offset += 1;
 		}
 
@@ -179,7 +175,6 @@ class RandomAccessFile {
 
 	/**
 	 * Advance the pointer forward a set number of bytes
-	 *
 	 * @category Positioning
 	 * @param {number} length Number of bytes to skip
 	 */

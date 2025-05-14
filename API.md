@@ -102,18 +102,18 @@ Read a single record from the radar data
 <a name="new_RandomAccessFile_new"></a>
 
 ### new RandomAccessFile(file, endian)
-Store a buffer or string and add functionality for random accessUnless otherwise noted all read functions advance the file's pointer by the length of the data read
+Store a array or string and add functionality for random accessUnless otherwise noted all read functions advance the file's pointer by the length of the data read
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| file | <code>Buffer</code> \| <code>string</code> | A file as a string or Buffer to load for random access |
+| file | <code>Uint8Array</code> \| <code>string</code> | A file as a string or Uint8Array to load for random access |
 | endian | <code>number</code> | Endianess of the file constants BIG_ENDIAN and LITTLE_ENDIAN are provided |
 
 <a name="RandomAccessFile+readString"></a>
 
 ### randomAccessFile.readString(length) ⇒ <code>string</code>
-Read a string of a specificed length from the buffer
+Read a string of a specificed length from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
@@ -125,49 +125,49 @@ Read a string of a specificed length from the buffer
 <a name="RandomAccessFile+readFloat"></a>
 
 ### randomAccessFile.readFloat() ⇒ <code>number</code>
-Read a float from the buffer
+Read a float from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+readInt"></a>
 
 ### randomAccessFile.readInt() ⇒ <code>number</code>
-Read a 4-byte unsigned integer from the buffer
+Read a 4-byte unsigned integer from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+readSInt4"></a>
 
 ### randomAccessFile.readSInt4() ⇒ <code>number</code>
-Read a 4-byte signed integer from the buffer
+Read a 4-byte signed integer from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+readShort"></a>
 
 ### randomAccessFile.readShort() ⇒ <code>number</code>
-Read a 2-byte unsigned integer from the buffer
+Read a 2-byte unsigned integer from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+readSignedInt"></a>
 
 ### randomAccessFile.readSignedInt() ⇒ <code>number</code>
-Read a 2-byte signed integer from the buffer
+Read a 2-byte signed integer from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+readByte"></a>
 
 ### randomAccessFile.readByte() ⇒ <code>number</code>
-Read a single byte from the buffer
+Read a single byte from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Data  
 <a name="RandomAccessFile+read"></a>
 
 ### randomAccessFile.read(length) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
-Read a set number of bytes from the buffer
+Read a set number of bytes from the array
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Returns**: <code>number</code> \| <code>Array.&lt;number&gt;</code> - number if length = 1, otherwise number[]  
@@ -180,7 +180,7 @@ Read a set number of bytes from the buffer
 <a name="RandomAccessFile+getLength"></a>
 
 ### randomAccessFile.getLength() ⇒ <code>number</code>
-Get buffer length
+Get array length
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Positioning  
@@ -194,7 +194,7 @@ Get current position in the file
 <a name="RandomAccessFile+seek"></a>
 
 ### randomAccessFile.seek(position)
-Seek to a provided buffer offset
+Seek to a provided array offset
 
 **Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
 **Category**: Positioning  
@@ -247,12 +247,12 @@ Advance the pointer forward a set number of bytes
 <a name="new_Level2Radar_new"></a>
 
 ### new Level2Radar(file, [options])
-Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Buffer`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.Radar data is accessed through the get* methods
+Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.Radar data is accessed through the get* methods
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| file | <code>Buffer</code> \| [<code>Level2Radar</code>](#Level2Radar) | Buffer with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data. |
+| file | <code>Uint8Array</code> \| [<code>Level2Radar</code>](#Level2Radar) | Uint8Array with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data. |
 | [options] | [<code>ParserOptions</code>](#ParserOptions) | Parser options |
 
 <a name="Level2Radar+setElevation"></a>
@@ -427,15 +427,15 @@ Combines the data returned by multiple runs of the Level2Data constructor. This 
 <a name="new_parseData_new"></a>
 
 ### new parseData(file, [options])
-Internal function. Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Buffer`.
+Internal function. Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`.
 
 **Returns**: <code>object</code> - Intermediate data for use with Level2Radar  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| file | <code>Buffer</code> |  | Buffer with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data. |
-| [options] | <code>object</code> |  | Parser options |
-| [options.logger] | <code>object</code> \| <code>boolean</code> | <code>console</code> | By default error and information messages will be written to the console. These can be suppressed by passing false, or a custom logger can be provided. A custom logger must provide the log(), warn() and error() function. |
+| Param | Type | Description |
+| --- | --- | --- |
+| file | <code>Uint8Array</code> | Uint8Array with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data. |
+| [options] | <code>object</code> | Parser options |
+| [options.logger] | <code>object</code> \| <code>boolean</code> | By default error and information messages will be written to the console. These can be suppressed by passing false, or a custom logger can be provided. A custom logger must provide the log(), warn() and error() function. |
 
 <a name="ParserOptions"></a>
 
@@ -486,7 +486,7 @@ See NOAA documentation for detailed meanings of these values.
 | control_flags | <code>number</code> |  |
 | data_size | <code>number</code> |  |
 | name | <code>string</code> | 'REF', 'VEL', 'SW ', 'ZDR', 'PHI', 'RHO' |
-| spare | <code>Array.&lt;Buffer&gt;</code> | Spare data per the documentation |
+| spare | <code>Array.&lt;Uint8Array&gt;</code> | Spare data per the documentation |
 | moment_data | <code>Array.&lt;number&gt;</code> | Scaled data |
 
 <a name="MessageHeader"></a>
@@ -585,7 +585,7 @@ File header detailsSee NOAA documentation for detailed meanings of these values
 | ICAO | <code>string</code> | Radar site identifier |
 | milliseconds | <code>number</code> | Milliseconds since midnight |
 | modified_julian_date | <code>number</code> | Days since Dec 31, 1969 |
-| raw | <code>Buffer</code> | Raw header from file |
+| raw | <code>Uint8Array</code> | Raw header from file |
 | version | <code>string</code> | Version number |
 
 <a name="Vcp"></a>

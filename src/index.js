@@ -8,19 +8,18 @@ const combineData = require('./combinedata');
 
 class Level2Radar {
 	/**
-	 * Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Buffer`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.
+	 * Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.
 	 * Radar data is accessed through the get* methods
-	 *
-	 * @param {Buffer|Level2Radar} file Buffer with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data.
+	 * @param {Uint8Array|Level2Radar} file Uint8Array with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data.
 	 * @param {ParserOptions} [options] Parser options
 	 */
 
 	constructor(file, options) {
 		// combine options with defaults
 		this.elevation = 1;	// 1 based per NOAA documentation
-		// default mode, parse file from buffer
-		if (file instanceof Buffer) {
-		// options and defaults
+		// default mode, parse file from Uint8Array
+		if (file instanceof Uint8Array) {
+			// options and defaults
 			this.options = combineOptions(options);
 			const {
 				data, header, vcp, hasGaps, isTruncated,
@@ -41,7 +40,6 @@ class Level2Radar {
 
 			/**
 			 * Gaps were found in the source data
-			 *
 			 * @type {boolean}
 			 * @category Metadata
 			 */
@@ -50,13 +48,12 @@ class Level2Radar {
 
 			/**
 			 * Source data was truncated
-			 *
 			 * @type {boolean}
 			 * @category Metadata
 			 */
 			this.isTruncated = isTruncated;
 		} else if (typeof file === 'object' && (file.data && file.header && file.vcp)) {
-		// alternative mode data is fed in as a pre-formatted object as the result of the combine static function
+			// alternative mode data is fed in as a pre-formatted object as the result of the combine static function
 			this.data = file.data;
 			this.elevation = file.elevation;
 			this.header = file.header;
@@ -71,7 +68,6 @@ class Level2Radar {
 
 	/**
 	 * Sets the elevation in use for get* methods
-	 *
 	 * @param {number} elevation Selected elevation number
 	 * @category Configuration
 	 */
@@ -82,7 +78,6 @@ class Level2Radar {
 	/**
 	 * Returns an single azimuth value or array of azimuth values for the current elevation and scan (or all scans if not provided).
 	 * The order of azimuths in the returned array matches the order of the data in other get* functions.
-	 *
 	 * @param {number} [scan] Selected scan
 	 * @category Data
 	 * @returns {number|number[]} Azimuth angle
@@ -105,7 +100,6 @@ class Level2Radar {
 
 	/**
 	 * Return the number of scans in the current elevation
-	 *
 	 * @category Metadata
 	 * @returns {number}
 	 */
@@ -118,7 +112,6 @@ class Level2Radar {
 
 	/**
 	 * Return message_header information for all scans or a specific scan for the selected elevation
-	 *
 	 * @category Metadata
 	 * @param {number} [scan] Selected scan, omit to return all scans for this elevation
 	 * @returns {MessageHeader}
@@ -140,7 +133,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar reflectivity data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan or null for all scans in elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res reflectivity data, or an array of the data.
@@ -162,7 +154,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar velocity data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan, or null for all scans in this elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res velocity data, or an array of the data.
@@ -185,7 +176,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar spectrum data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan, or null for all scans in this elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res spectrum data, or an array of the data.
@@ -207,7 +197,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar differential reflectivity data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan or null for all scans in elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res differential reflectivity data, or an array of the data.
@@ -229,7 +218,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar differential phase data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan or null for all scans in elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res differential phase data, or an array of the data.
@@ -251,7 +239,6 @@ class Level2Radar {
 
 	/**
 	 * Returns an Object of radar correlation coefficient data for the current elevation and scan (or all scans if not provided)
-	 *
 	 * @category Data
 	 * @param {number} [scan] Selected scan or null for all scans in elevation
 	 * @returns {HighResData|HighResData[]} Scan's high res correlation coefficient data, or an array of the data.
@@ -273,7 +260,6 @@ class Level2Radar {
 
 	/**
 	 * List all available elevations
-	 *
 	 * @category Metadata
 	 * @returns {number[]}
 	 */
@@ -289,7 +275,6 @@ class Level2Radar {
 	 * Combines the data returned by multiple runs of the Level2Data constructor. This is typically used in "chunks" mode to combine all azimuths from one revolution into a single data set. data can be provided as an array of Level2Radar objects, individual Level2Data parameters or any combination thereof.
 	 *
 	 * The combine function blindly combines data and the right-most argument will overwrite any previously provided data. Individual azimuths located in Level2Radar.data[] will be appended. It is up to the calling routine to properly manage the parsing of related chunks and send it in to this routine.
-	 *
 	 * @param  {...Level2Radar} data Data to combine
 	 * @returns {Level2Radar} Combined data
 	 */
@@ -312,9 +297,9 @@ const combineOptions = (newOptions) => {
 
 // null logger for options.logger = false
 const nullLogger = {
-	log: () => {},
-	error: () => {},
-	warn: () => {},
+	log: () => { },
+	error: () => { },
+	warn: () => { },
 };
 
 module.exports.Level2Radar = Level2Radar;

@@ -6,7 +6,7 @@
 	"configurations": [
 		{
 			"name": "Test-Chunks",
-			"program": "${workspaceFolder}/test-chunks.js",
+			"program": "${workspaceFolder}/test/test-chunks.js",
 			"request": "launch",
 			"skipFiles": [
 				"<node_internals>/**"
@@ -16,7 +16,7 @@
 		},
 		{
 			"name": "Test-Error",
-			"program": "${workspaceFolder}/test-error.js",
+			"program": "${workspaceFolder}/test/test-error.js",
 			"request": "launch",
 			"skipFiles": [
 				"<node_internals>/**"
@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "Decompress",
-			"program": "${workspaceFolder}/test-decompress.js",
+			"program": "${workspaceFolder}/test/test-decompress.js",
 			"request": "launch",
 			"skipFiles": [
 				"<node_internals>/**"
@@ -41,7 +41,7 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"program": "${workspaceFolder}/test.js"
+			"program": "${workspaceFolder}/test/test.js"
 		},
 		{
 			"type": "node",
@@ -50,7 +50,7 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"program": "${workspaceFolder}/test-group.js"
+			"program": "${workspaceFolder}/test/test-group.js"
 		}
 	]
 }
