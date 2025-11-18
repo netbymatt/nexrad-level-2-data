@@ -34,7 +34,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^48.0.0",
-    "glob": "^10.0.0",
+    "glob": "^11.1.0",
     "gulp": "^5.0.0",
     "gulp-jsdoc3": "^3.0.0",
     "jsdoc": "^4.0.3",
