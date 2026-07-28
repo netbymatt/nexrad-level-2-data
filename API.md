@@ -1,23 +1,5 @@
 ## Classes
 
-* [Level2Record](#Level2Record)
-    * [new Level2Record(raf, record, message31Offset, header, [options])](#new_Level2Record_new)
-* [RandomAccessFile](#RandomAccessFile)
-    * [new RandomAccessFile(file, endian)](#new_RandomAccessFile_new)
-    * _Data_
-        * [.readString(length)](#RandomAccessFile+readString) ⇒ <code>string</code>
-        * [.readFloat()](#RandomAccessFile+readFloat) ⇒ <code>number</code>
-        * [.readInt()](#RandomAccessFile+readInt) ⇒ <code>number</code>
-        * [.readSInt4()](#RandomAccessFile+readSInt4) ⇒ <code>number</code>
-        * [.readShort()](#RandomAccessFile+readShort) ⇒ <code>number</code>
-        * [.readSignedInt()](#RandomAccessFile+readSignedInt) ⇒ <code>number</code>
-        * [.readByte()](#RandomAccessFile+readByte) ⇒ <code>number</code>
-        * [.read(length)](#RandomAccessFile+read) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
-    * _Positioning_
-        * [.getLength()](#RandomAccessFile+getLength) ⇒ <code>number</code>
-        * [.getPos()](#RandomAccessFile+getPos) ⇒ <code>number</code>
-        * [.seek(position)](#RandomAccessFile+seek)
-        * [.skip(length)](#RandomAccessFile+skip)
 * [Level2Radar](#Level2Radar)
     * [new Level2Radar(file, [options])](#new_Level2Radar_new)
     * _instance_
@@ -43,45 +25,6 @@
         * [.combineData(...data)](#Level2Radar.combineData) ⇒ [<code>Level2Radar</code>](#Level2Radar)
 * [parseData](#parseData)
     * [new parseData(file, [options])](#new_parseData_new)
-
-## Typedefs
-
-* [ParserOptions](#ParserOptions) : <code>object</code>
-* [ParsedData](#ParsedData) : <code>object</code>
-* [HighResData](#HighResData) : <code>object</code>
-* [MessageHeader](#MessageHeader) : <code>object</code>
-* [Radial](#Radial) : <code>object</code>
-* [Volume](#Volume) : <code>object</code>
-* [Header](#Header) : <code>object</code>
-* [Vcp](#Vcp) : <code>object</code>
-* [VcpRecord](#VcpRecord) : <code>object</code>
-* [VcpSequencing](#VcpSequencing) : <code>object</code>
-* [VcpSupplemental](#VcpSupplemental) : <code>object</code>
-
-<a name="Level2Record"></a>
-
-## Level2Record
-**Kind**: global class  
-<a name="new_Level2Record_new"></a>
-
-### new Level2Record(raf, record, message31Offset, header, [options])
-Read a single record from the radar data
-
-**Returns**: <code>object</code> - Variable data based on message types present in record  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| raf | [<code>RandomAccessFile</code>](#RandomAccessFile) | Random access file |
-| record | <code>number</code> | Record number |
-| message31Offset | <code>number</code> | Additional record offset caused by message 31 size |
-| header | [<code>Header</code>](#Header) | Original parsed file header |
-| [options] | [<code>ParserOptions</code>](#ParserOptions) | Parser options |
-
-<a name="RandomAccessFile"></a>
-
-## RandomAccessFile
-**Kind**: global class  
-
 * [RandomAccessFile](#RandomAccessFile)
     * [new RandomAccessFile(file, endian)](#new_RandomAccessFile_new)
     * _Data_
@@ -98,122 +41,22 @@ Read a single record from the radar data
         * [.getPos()](#RandomAccessFile+getPos) ⇒ <code>number</code>
         * [.seek(position)](#RandomAccessFile+seek)
         * [.skip(length)](#RandomAccessFile+skip)
+* [Level2Record](#Level2Record)
+    * [new Level2Record(raf, record, message31Offset, header, [options])](#new_Level2Record_new)
 
-<a name="new_RandomAccessFile_new"></a>
+## Typedefs
 
-### new RandomAccessFile(file, endian)
-Store a array or string and add functionality for random accessUnless otherwise noted all read functions advance the file's pointer by the length of the data read
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| file | <code>Uint8Array</code> \| <code>string</code> | A file as a string or Uint8Array to load for random access |
-| endian | <code>number</code> | Endianess of the file constants BIG_ENDIAN and LITTLE_ENDIAN are provided |
-
-<a name="RandomAccessFile+readString"></a>
-
-### randomAccessFile.readString(length) ⇒ <code>string</code>
-Read a string of a specificed length from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| length | <code>number</code> | Length of string to read |
-
-<a name="RandomAccessFile+readFloat"></a>
-
-### randomAccessFile.readFloat() ⇒ <code>number</code>
-Read a float from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+readInt"></a>
-
-### randomAccessFile.readInt() ⇒ <code>number</code>
-Read a 4-byte unsigned integer from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+readSInt4"></a>
-
-### randomAccessFile.readSInt4() ⇒ <code>number</code>
-Read a 4-byte signed integer from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+readShort"></a>
-
-### randomAccessFile.readShort() ⇒ <code>number</code>
-Read a 2-byte unsigned integer from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+readSignedInt"></a>
-
-### randomAccessFile.readSignedInt() ⇒ <code>number</code>
-Read a 2-byte signed integer from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+readByte"></a>
-
-### randomAccessFile.readByte() ⇒ <code>number</code>
-Read a single byte from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Data  
-<a name="RandomAccessFile+read"></a>
-
-### randomAccessFile.read(length) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
-Read a set number of bytes from the array
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Returns**: <code>number</code> \| <code>Array.&lt;number&gt;</code> - number if length = 1, otherwise number[]  
-**Category**: Data  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| length | <code>number</code> | <code>1</code> | Number of bytes to read |
-
-<a name="RandomAccessFile+getLength"></a>
-
-### randomAccessFile.getLength() ⇒ <code>number</code>
-Get array length
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Positioning  
-<a name="RandomAccessFile+getPos"></a>
-
-### randomAccessFile.getPos() ⇒ <code>number</code>
-Get current position in the file
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Positioning  
-<a name="RandomAccessFile+seek"></a>
-
-### randomAccessFile.seek(position)
-Seek to a provided array offset
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Positioning  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| position | <code>number</code> | Byte offset |
-
-<a name="RandomAccessFile+skip"></a>
-
-### randomAccessFile.skip(length)
-Advance the pointer forward a set number of bytes
-
-**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
-**Category**: Positioning  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| length | <code>number</code> | Number of bytes to skip |
+* [ParserOptions](#ParserOptions) : <code>object</code>
+* [ParsedData](#ParsedData) : <code>object</code>
+* [HighResData](#HighResData) : <code>object</code>
+* [MessageHeader](#MessageHeader) : <code>object</code>
+* [Radial](#Radial) : <code>object</code>
+* [Volume](#Volume) : <code>object</code>
+* [Header](#Header) : <code>object</code>
+* [Vcp](#Vcp) : <code>object</code>
+* [VcpRecord](#VcpRecord) : <code>object</code>
+* [VcpSequencing](#VcpSequencing) : <code>object</code>
+* [VcpSupplemental](#VcpSupplemental) : <code>object</code>
 
 <a name="Level2Radar"></a>
 
@@ -247,7 +90,8 @@ Advance the pointer forward a set number of bytes
 <a name="new_Level2Radar_new"></a>
 
 ### new Level2Radar(file, [options])
-Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.Radar data is accessed through the get* methods
+Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.
+Radar data is accessed through the get* methods
 
 
 | Param | Type | Description |
@@ -270,7 +114,8 @@ Sets the elevation in use for get* methods
 <a name="Level2Radar+getAzimuth"></a>
 
 ### level2Radar.getAzimuth([scan]) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
-Returns an single azimuth value or array of azimuth values for the current elevation and scan (or all scans if not provided).The order of azimuths in the returned array matches the order of the data in other get* functions.
+Returns an single azimuth value or array of azimuth values for the current elevation and scan (or all scans if not provided).
+The order of azimuths in the returned array matches the order of the data in other get* functions.
 
 **Kind**: instance method of [<code>Level2Radar</code>](#Level2Radar)  
 **Returns**: <code>number</code> \| <code>Array.&lt;number&gt;</code> - Azimuth angle  
@@ -411,7 +256,9 @@ List all available elevations
 <a name="Level2Radar.combineData"></a>
 
 ### Level2Radar.combineData(...data) ⇒ [<code>Level2Radar</code>](#Level2Radar)
-Combines the data returned by multiple runs of the Level2Data constructor. This is typically used in "chunks" mode to combine all azimuths from one revolution into a single data set. data can be provided as an array of Level2Radar objects, individual Level2Data parameters or any combination thereof.The combine function blindly combines data and the right-most argument will overwrite any previously provided data. Individual azimuths located in Level2Radar.data[] will be appended. It is up to the calling routine to properly manage the parsing of related chunks and send it in to this routine.
+Combines the data returned by multiple runs of the Level2Data constructor. This is typically used in "chunks" mode to combine all azimuths from one revolution into a single data set. data can be provided as an array of Level2Radar objects, individual Level2Data parameters or any combination thereof.
+
+The combine function blindly combines data and the right-most argument will overwrite any previously provided data. Individual azimuths located in Level2Radar.data[] will be appended. It is up to the calling routine to properly manage the parsing of related chunks and send it in to this routine.
 
 **Kind**: static method of [<code>Level2Radar</code>](#Level2Radar)  
 **Returns**: [<code>Level2Radar</code>](#Level2Radar) - Combined data  
@@ -436,6 +283,164 @@ Internal function. Parses a Nexrad Level 2 Data archive or chunk. Provide `rawDa
 | file | <code>Uint8Array</code> | Uint8Array with Nexrad Level 2 data. Alternatively a Level2Radar object, typically used internally when combining data. |
 | [options] | <code>object</code> | Parser options |
 | [options.logger] | <code>object</code> \| <code>boolean</code> | By default error and information messages will be written to the console. These can be suppressed by passing false, or a custom logger can be provided. A custom logger must provide the log(), warn() and error() function. |
+
+<a name="RandomAccessFile"></a>
+
+## RandomAccessFile
+**Kind**: global class  
+
+* [RandomAccessFile](#RandomAccessFile)
+    * [new RandomAccessFile(file, endian)](#new_RandomAccessFile_new)
+    * _Data_
+        * [.readString(length)](#RandomAccessFile+readString) ⇒ <code>string</code>
+        * [.readFloat()](#RandomAccessFile+readFloat) ⇒ <code>number</code>
+        * [.readInt()](#RandomAccessFile+readInt) ⇒ <code>number</code>
+        * [.readSInt4()](#RandomAccessFile+readSInt4) ⇒ <code>number</code>
+        * [.readShort()](#RandomAccessFile+readShort) ⇒ <code>number</code>
+        * [.readSignedInt()](#RandomAccessFile+readSignedInt) ⇒ <code>number</code>
+        * [.readByte()](#RandomAccessFile+readByte) ⇒ <code>number</code>
+        * [.read(length)](#RandomAccessFile+read) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
+    * _Positioning_
+        * [.getLength()](#RandomAccessFile+getLength) ⇒ <code>number</code>
+        * [.getPos()](#RandomAccessFile+getPos) ⇒ <code>number</code>
+        * [.seek(position)](#RandomAccessFile+seek)
+        * [.skip(length)](#RandomAccessFile+skip)
+
+<a name="new_RandomAccessFile_new"></a>
+
+### new RandomAccessFile(file, endian)
+Store a array or string and add functionality for random access
+Unless otherwise noted all read functions advance the file's pointer by the length of the data read
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| file | <code>Uint8Array</code> \| <code>string</code> | A file as a string or Uint8Array to load for random access |
+| endian | <code>number</code> | Endianess of the file constants BIG_ENDIAN and LITTLE_ENDIAN are provided |
+
+<a name="RandomAccessFile+readString"></a>
+
+### randomAccessFile.readString(length) ⇒ <code>string</code>
+Read a string of a specificed length from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| length | <code>number</code> | Length of string to read |
+
+<a name="RandomAccessFile+readFloat"></a>
+
+### randomAccessFile.readFloat() ⇒ <code>number</code>
+Read a float from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+readInt"></a>
+
+### randomAccessFile.readInt() ⇒ <code>number</code>
+Read a 4-byte unsigned integer from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+readSInt4"></a>
+
+### randomAccessFile.readSInt4() ⇒ <code>number</code>
+Read a 4-byte signed integer from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+readShort"></a>
+
+### randomAccessFile.readShort() ⇒ <code>number</code>
+Read a 2-byte unsigned integer from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+readSignedInt"></a>
+
+### randomAccessFile.readSignedInt() ⇒ <code>number</code>
+Read a 2-byte signed integer from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+readByte"></a>
+
+### randomAccessFile.readByte() ⇒ <code>number</code>
+Read a single byte from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Data  
+<a name="RandomAccessFile+read"></a>
+
+### randomAccessFile.read(length) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
+Read a set number of bytes from the array
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Returns**: <code>number</code> \| <code>Array.&lt;number&gt;</code> - number if length = 1, otherwise number[]  
+**Category**: Data  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| length | <code>number</code> | <code>1</code> | Number of bytes to read |
+
+<a name="RandomAccessFile+getLength"></a>
+
+### randomAccessFile.getLength() ⇒ <code>number</code>
+Get array length
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Positioning  
+<a name="RandomAccessFile+getPos"></a>
+
+### randomAccessFile.getPos() ⇒ <code>number</code>
+Get current position in the file
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Positioning  
+<a name="RandomAccessFile+seek"></a>
+
+### randomAccessFile.seek(position)
+Seek to a provided array offset
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Positioning  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| position | <code>number</code> | Byte offset |
+
+<a name="RandomAccessFile+skip"></a>
+
+### randomAccessFile.skip(length)
+Advance the pointer forward a set number of bytes
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Category**: Positioning  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| length | <code>number</code> | Number of bytes to skip |
+
+<a name="Level2Record"></a>
+
+## Level2Record
+**Kind**: global class  
+<a name="new_Level2Record_new"></a>
+
+### new Level2Record(raf, record, message31Offset, header, [options])
+Read a single record from the radar data
+
+**Returns**: <code>object</code> - Variable data based on message types present in record  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| raf | [<code>RandomAccessFile</code>](#RandomAccessFile) | Random access file |
+| record | <code>number</code> | Record number |
+| message31Offset | <code>number</code> | Additional record offset caused by message 31 size |
+| header | [<code>Header</code>](#Header) | Original parsed file header |
+| [options] | [<code>ParserOptions</code>](#ParserOptions) | Parser options |
 
 <a name="ParserOptions"></a>
 
@@ -575,7 +580,8 @@ See NOAA documentation for detailed meanings of these values.
 <a name="Header"></a>
 
 ## Header : <code>object</code>
-File header detailsSee NOAA documentation for detailed meanings of these values.
+File header details
+See NOAA documentation for detailed meanings of these values.
 
 **Kind**: global typedef  
 **Properties**
@@ -591,7 +597,8 @@ File header detailsSee NOAA documentation for detailed meanings of these values
 <a name="Vcp"></a>
 
 ## Vcp : <code>object</code>
-Volume coverage patternSee NOAA documentation for detailed meanings of these values.
+Volume coverage pattern
+See NOAA documentation for detailed meanings of these values.
 
 **Kind**: global typedef  
 **Properties**

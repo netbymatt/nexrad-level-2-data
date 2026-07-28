@@ -5,16 +5,17 @@ import fs from 'node:fs';
 import { deleteAsync } from 'del';
 
 const files = [
-	'src/index.js',
-	'src/parsedata.js',
+	'src/index.mjs',
+	'src/parsedata.mjs',
 	'src/typedefs.js',
-	'src/classes/RandomAccessFile.js',
-	'src/classes/Level2Record.js',
+	'src/classes/RandomAccessFile.mjs',
+	'src/classes/Level2Record.mjs',
 	'README.md',
 ];
 
 const mdConfig = {
 	files,
+	configure: './jsdoc.conf.json',
 	'global-index-format': 'grouped',
 };
 
@@ -22,7 +23,7 @@ const htmlConfig = {
 	opts: {
 		destination: './docs',
 	},
-
+	configure: './jsdoc.conf.json',
 };
 
 gulp.task('docs', async () => {
