@@ -9,6 +9,31 @@ import parseMessage31 from './Level2Record-31.mjs';
 import parseMessage5 from './Level2Record-5-7.mjs';
 import { level2RecordSearch } from './Level2RecordSearch.mjs';
 
+const getRecord = (raf, recordOffset, options) => {
+	raf.seek(recordOffset);
+	raf.skip(CTM_HEADER_SIZE);
+
+	const message = {
+		message_size: raf.readShort(),
+		channel: raf.readByte(),
+		message_type: raf.readByte(),
+		id_sequence: raf.readShort(),
+		message_julian_date: raf.readShort(),
+		message_mseconds: raf.readInt(),
+		segment_count: raf.readShort(),
+		segment_number: raf.readShort(),
+	};
+
+	switch (message.message_type) {
+		case 31: return parseMessage31(raf, message, recordOffset, options);
+		case 1: return parseMessage1(raf, message, options);
+		case 2: return parseMessage2(raf, message);
+		case 5:
+		case 7: return parseMessage5(raf, message);
+		default: return false;
+	}
+};
+
 /**
  * Read a single record from the radar data
  * @class Level2Record
@@ -42,31 +67,6 @@ const Level2Record = (raf, record, message31Offset, header, options) => {
 	}
 	message.actual_size = (nextRecordPos - recordOffset) / 2 - CTM_HEADER_SIZE;
 	return message;
-};
-
-const getRecord = (raf, recordOffset, options) => {
-	raf.seek(recordOffset);
-	raf.skip(CTM_HEADER_SIZE);
-
-	const message = {
-		message_size: raf.readShort(),
-		channel: raf.readByte(),
-		message_type: raf.readByte(),
-		id_sequence: raf.readShort(),
-		message_julian_date: raf.readShort(),
-		message_mseconds: raf.readInt(),
-		segment_count: raf.readShort(),
-		segment_number: raf.readShort(),
-	};
-
-	switch (message.message_type) {
-		case 31: return parseMessage31(raf, message, recordOffset, options);
-		case 1: return parseMessage1(raf, message, options);
-		case 2: return parseMessage2(raf, message);
-		case 5:
-		case 7: return parseMessage5(raf, message);
-		default: return false;
-	}
 };
 
 export default Level2Record;

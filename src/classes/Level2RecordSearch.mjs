@@ -1,21 +1,5 @@
 // attempt to search for the next message by looking for some known values
 
-const level2RecordSearch = (raf, startPos, julianDate, options) => {
-	// if julian date if provided (typically when processing chunks) a search cannot be performed
-	if (julianDate === undefined) return false;
-
-	// set up the raf at the start position
-	raf.seek(startPos);
-	// try searching with the provided julian date
-	const result = search(raf, julianDate, options);
-	// return the result if found
-	if (result) return result;
-
-	// try again with julian date + 1 in case this happened right at midnight
-	raf.seek(startPos);
-	return search(raf, julianDate + 1, options);
-};
-
 const search = (raf, date, options) => {
 	// calculate end of file after subtracting our search bytes
 	const endOfFile = raf.array.length - 10;
@@ -46,6 +30,23 @@ const search = (raf, date, options) => {
 	// not found, return false
 	return false;
 };
+
+const level2RecordSearch = (raf, startPos, julianDate, options) => {
+	// if julian date if provided (typically when processing chunks) a search cannot be performed
+	if (julianDate === undefined) return false;
+
+	// set up the raf at the start position
+	raf.seek(startPos);
+	// try searching with the provided julian date
+	const result = search(raf, julianDate, options);
+	// return the result if found
+	if (result) return result;
+
+	// try again with julian date + 1 in case this happened right at midnight
+	raf.seek(startPos);
+	return search(raf, julianDate + 1, options);
+};
+
 export default level2RecordSearch;
 export {
 	level2RecordSearch,

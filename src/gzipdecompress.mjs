@@ -1,11 +1,12 @@
-import zlib from 'zlib';
+import zlib from 'node:zlib';
 
 // structured byte access
 import { RandomAccessFile, BIG_ENDIAN } from './classes/RandomAccessFile.mjs';
 
-const decompress = (raf) => {
+const gzipDecompress = (raf) => {
+	// eslint-disable-next-line n/no-sync
 	const data = zlib.gunzipSync(raf.array);
 	return new RandomAccessFile(data, BIG_ENDIAN);
 };
 
-export default decompress;
+export default gzipDecompress;

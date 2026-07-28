@@ -5,7 +5,7 @@
 // Scan data is always appended to the arrays. Chunks should not repeat the data, and processing the data one chunk at a time to be fed to this
 // tool is a fairly straight-forward process given the pre-established NOAA file naming/splitting standards
 
-const combine = (...args) => {
+const combineData = (...args) => {
 	// create a single flat array
 	const rawData = args.flat(50);
 
@@ -38,4 +38,4 @@ const combine = (...args) => {
 	return output;
 };
 
-export default combine;
+export default combineData;

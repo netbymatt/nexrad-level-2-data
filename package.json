@@ -6,7 +6,9 @@
 	"type": "module",
 	"scripts": {
 		"test": "node test.mjs",
-		"docs": "npx gulp docs"
+		"docs": "npx gulp docs",
+		"lint": "npx eslint .",
+		"lint:fix": "npx eslint . --fix"
 	},
 	"repository": {
 		"type": "git",
@@ -30,18 +32,19 @@
 		"seek-bzip": "^2.0.0"
 	},
 	"devDependencies": {
+		"@eslint/compat": "^2.1.0",
+		"@eslint/js": "^9.39.5",
 		"del": "^8.0.0",
-		"eslint": "^8.0.0",
-		"eslint-config-airbnb-base": "^15.0.0",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-jsdoc": "^50.6.16",
-		"glob": "^11.0.2",
+		"eslint": "^9.39.5",
+		"eslint-config-airbnb-extended": "^3.1.1",
+		"eslint-plugin-jsdoc": "^63.3.1",
+		"glob": "^13.0.6",
 		"gulp": "^5.0.0",
 		"gulp-jsdoc3": "^3.0.0",
 		"jsdoc": "^4.0.3",
 		"jsdoc-to-markdown": "^9.1.1"
 	},
 	"engines": {
-		"node": ">=13.0.0"
+		"node": ">=24.0.0"
 	}
 }

@@ -1,6 +1,6 @@
 import { FILE_HEADER_SIZE } from './constants.mjs';
 
-const parse = (raf) => {
+const parseHeader = (raf) => {
 	// check for fixed 'AR2V00' value
 	const identifier = raf.readString(6);
 
@@ -21,4 +21,4 @@ const parse = (raf) => {
 	return {};
 };
 
-export default parse;
+export default parseHeader;

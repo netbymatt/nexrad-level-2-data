@@ -12,6 +12,13 @@ import { RandomAccessFile, BIG_ENDIAN } from './classes/RandomAccessFile.mjs';
 // constants
 import { FILE_HEADER_SIZE } from './constants.mjs';
 
+// compression header is (int) size of block + 'BZh' + one character block size
+const readCompressionHeader = (raf) => ({
+	size: raf.readInt(),
+	header: raf.readString(3),
+	block_size: raf.readString(1),
+});
+
 const decompress = (raf) => {
 	// detect gzip header
 	const gZipHeader = raf.read(2);
@@ -78,12 +85,5 @@ const decompress = (raf) => {
 	// pass the array to RandomAccessFile and return the result
 	return new RandomAccessFile(outArray, BIG_ENDIAN);
 };
-
-// compression header is (int) size of block + 'BZh' + one character block size
-const readCompressionHeader = (raf) => ({
-	size: raf.readInt(),
-	header: raf.readString(3),
-	block_size: raf.readString(1),
-});
 
 export default decompress;

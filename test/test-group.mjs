@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import fs from 'fs/promises';
-import glob from 'glob';
-import { Level2Radar } from '../src/index.mjs';
+import fs from 'node:fs/promises';
+import { glob } from 'glob';
+import Level2Radar from '../src/index.mjs';
 
 // const fileToLoad = './data/non-hi-res/KLOT19950413_132143.gz'; // The radar archive file to load
 const filesToLoad = './data/KLOT20200715_230602_V06'; // The radar archive file to load
 // const fileToLoadCompressed = './data/KLOT20200715_230602_V06'; // The radar archive file to load
 // const fileToLoadError = './data/messagesizeerror';
-const files = glob.sync(filesToLoad);
+const files = await glob(filesToLoad);
 
 files.forEach(async (file) => {
 	console.log(file);

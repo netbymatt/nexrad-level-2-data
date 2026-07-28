@@ -29,15 +29,15 @@ class RandomAccessFile {
 		const outerView = new DataView(file.buffer);
 		this.readFloatLocal = (offset) => outerView.getFloat32(offset, false);
 		this.readIntLocal = (offset, byteLength) => {
-			if (byteLength === 1) { return outerView.getUint8(offset); }
-			if (byteLength === 2) { return outerView.getUint16(offset, !this.bigEndian); }
-			if (byteLength === 4) { return outerView.getUint32(offset, !this.bigEndian); }
+			if (byteLength === 1) return outerView.getUint8(offset);
+			if (byteLength === 2) return outerView.getUint16(offset, !this.bigEndian);
+			if (byteLength === 4) return outerView.getUint32(offset, !this.bigEndian);
 			throw new Error('Unsupported byteLength', byteLength);
 		};
 		this.readSignedIntLocal = (offset, byteLength) => {
-			if (byteLength === 1) { return outerView.getInt8(offset); }
-			if (byteLength === 2) { return outerView.getInt16(offset, !this.bigEndian); }
-			if (byteLength === 4) { return outerView.getInt32(offset, !this.bigEndian); }
+			if (byteLength === 1) return outerView.getInt8(offset);
+			if (byteLength === 2) return outerView.getInt16(offset, !this.bigEndian);
+			if (byteLength === 4) return outerView.getInt32(offset, !this.bigEndian);
 			throw new Error('Unsupported byteLength', byteLength);
 		};
 		const decoder = new TextDecoder();

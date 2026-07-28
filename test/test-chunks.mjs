@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import fs from 'fs';
+import fs from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 import { glob } from 'glob';
-import { Level2Radar } from '../src/index.mjs';
+import Level2Radar from '../src/index.mjs';
 
 // const files = [
 // 	// './data/chunks/230/20210729-123848-001-S',
@@ -18,6 +19,7 @@ files.forEach((fileToLoad) => {
 	// load file
 	let data;
 	try {
+		// eslint-disable-next-line n/no-sync
 		data = fs.readFileSync(fileToLoad);
 	} catch (e) {
 		console.error('Unable to read file');
@@ -40,4 +42,4 @@ files.forEach((fileToLoad) => {
 const full = Level2Radar.combineData(chunks);
 
 console.log(full);
-fs.writeFileSync('test/output/test-chunks.json', JSON.stringify(chunks[1], null, 2));
+await writeFile('test/output/test-chunks.json', JSON.stringify(chunks[1], null, 2));

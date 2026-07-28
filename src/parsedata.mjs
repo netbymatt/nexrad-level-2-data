@@ -4,6 +4,30 @@ import { RADAR_DATA_SIZE } from './constants.mjs';
 import decompress from './decompress.mjs';
 import parseHeader from './parseheader.mjs';
 
+// This takes the scans (aka sweeps) and groups them
+// by their elevation numbers.
+const groupAndSortScans = (scans) => {
+	const groups = [];
+
+	// map the scans
+	scans.forEach((scan) => {
+		const { elevation_number: elevationNumber } = scan.record;
+
+		/**
+		 * If the group has already been created
+		 * just push the current scan into the array
+		 * or create a new group for the elevation
+		 */
+		if (groups[elevationNumber]) {
+			groups[elevationNumber].push(scan);
+		} else {
+			groups[elevationNumber] = [scan];
+		}
+	});
+
+	return groups;
+};
+
 /**
  * @typedef {object} ParsedData Intermediate parsed radar data, further processed by Level2Radar
 	*	@property {object} data Grouped and sorted data
@@ -86,30 +110,6 @@ const parseData = (file, options) => {
 		isTruncated,
 		hasGaps,
 	};
-};
-
-// This takes the scans (aka sweeps) and groups them
-// by their elevation numbers.
-const groupAndSortScans = (scans) => {
-	const groups = [];
-
-	// map the scans
-	scans.forEach((scan) => {
-		const { elevation_number: elevationNumber } = scan.record;
-
-		/**
-		 * If the group has already been created
-		 * just push the current scan into the array
-		 * or create a new group for the elevation
-		 */
-		if (groups[elevationNumber]) {
-			groups[elevationNumber].push(scan);
-		} else {
-			groups[elevationNumber] = [scan];
-		}
-	});
-
-	return groups;
 };
 
 export default parseData;

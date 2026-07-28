@@ -1,3 +1,16 @@
+const buildNumber = (raw) => {
+	if (raw / 100 > 2) return raw / 100;
+	return raw / 10;
+};
+
+const alarmCodes = (raf) => {
+	const alarms = [];
+	for (let i = 0; i < 14; i += 1) {
+		alarms.push(raf.readShort());
+	}
+	return alarms;
+};
+
 // parse message type 2
 export default (raf, message) => {
 	message.record = {
@@ -34,17 +47,4 @@ export default (raf, message) => {
 	};
 
 	return message;
-};
-
-const buildNumber = (raw) => {
-	if (raw / 100 > 2) return raw / 100;
-	return raw / 10;
-};
-
-const alarmCodes = (raf) => {
-	const alarms = [];
-	for (let i = 0; i < 14; i += 1) {
-		alarms.push(raf.readShort());
-	}
-	return alarms;
 };

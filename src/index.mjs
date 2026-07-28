@@ -6,6 +6,21 @@ import combineData from './combinedata.mjs';
  * @property {(object | boolean)} [logger=console] By default error and information messages will be written to the console. These can be suppressed by passing false, or a custom logger can be provided. A custom logger must provide the log() and error() functions.
  */
 
+// null logger for options.logger = false
+const nullLogger = {
+	log: () => { },
+	error: () => { },
+	warn: () => { },
+};
+
+// combine options and defaults
+const combineOptions = (newOptions) => {
+	let logger = newOptions?.logger ?? console;
+	if (logger === false) logger = nullLogger;
+	return {
+		...newOptions, logger,
+	};
+};
 class Level2Radar {
 	/**
 	 * Parses a Nexrad Level 2 Data archive or chunk. Provide `rawData` as a `Uint8Array`. Returns an object formatted per the [ICD FOR RDA/RPG - Build RDA 20.0/RPG 20.0 (PDF)](https://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620002U.pdf), or as close as can reasonably be represented in a javascript object. Additional data accessors are provided in the returned object to pull out typical data in a format ready for processing.
@@ -286,23 +301,4 @@ class Level2Radar {
 	}
 }
 
-// combine options and defaults
-const combineOptions = (newOptions) => {
-	let logger = newOptions?.logger ?? console;
-	if (logger === false) logger = nullLogger;
-	return {
-		...newOptions, logger,
-	};
-};
-
-// null logger for options.logger = false
-const nullLogger = {
-	log: () => { },
-	error: () => { },
-	warn: () => { },
-};
-
 export default Level2Radar;
-export {
-	Level2Radar,
-};
