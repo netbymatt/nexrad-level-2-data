@@ -27,6 +27,9 @@ class RandomAccessFile {
 
 		// set up local read functions so we don't constantly query endianess
 		const outerView = new DataView(file.buffer);
+		// keep a reference available for bulk reads (see readValues) that bypass the
+		// per-call overhead of the read*() methods below
+		this.view = outerView;
 		this.readFloatLocal = (offset) => outerView.getFloat32(offset, false);
 		this.readIntLocal = (offset, byteLength) => {
 			if (byteLength === 1) return outerView.getUint8(offset);
@@ -180,6 +183,39 @@ class RandomAccessFile {
 	 */
 	skip(length) {
 		this.offset += length;
+	}
+
+	/**
+	 * Read a run of fixed-width unsigned integers, advancing the pointer past all of them.
+	 * Equivalent to calling readByte()/readShort() `count` times, but avoids the per-call
+	 * overhead of those methods which matters when reading large gate arrays (radial moment
+	 * data can total in the tens of millions of values for a single file).
+	 * @category Data
+	 * @param {number} count Number of values to read
+	 * @param {number} byteLength Byte length of each value, 1 or 2
+	 * @returns {number[]} Array of values, length === count
+	 */
+	readValues(count, byteLength) {
+		const values = new Array(count);
+		let { offset } = this;
+		if (byteLength === 1) {
+			const { array } = this;
+			for (let i = 0; i < count; i += 1) {
+				values[i] = array[offset];
+				offset += 1;
+			}
+		} else if (byteLength === 2) {
+			const { view } = this;
+			const littleEndian = !this.bigEndian;
+			for (let i = 0; i < count; i += 1) {
+				values[i] = view.getUint16(offset, littleEndian);
+				offset += 2;
+			}
+		} else {
+			throw new Error('Unsupported byteLength', byteLength);
+		}
+		this.offset = offset;
+		return values;
 	}
 }
 

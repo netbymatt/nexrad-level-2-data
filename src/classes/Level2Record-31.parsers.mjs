@@ -91,25 +91,21 @@ const parseMomentData = (raf) => {
 	};
 
 	// allow for different sized data blocks
-	let getDataBlock = raf.read.bind(raf);
-	let inc = 1;
-	if (data.data_size === 16) {
-		getDataBlock = raf.readShort.bind(raf);
-		inc = 2;
-	}
+	const byteLength = data.data_size === 16 ? 2 : 1;
 
-	// const endI = data.gate_count * inc + MESSAGE_HEADER_SIZE;
-	const endI = data.gate_count * inc;
+	// bulk-read the raw gate values in one pass, this avoids the function-call overhead
+	// of reading one byte/short at a time, which matters here since a single file can
+	// contain tens of millions of gate values across all of its radials and moments
+	const rawValues = raf.readValues(data.gate_count, byteLength);
 
-	// raf.skip(MESSAGE_HEADER_SIZE);
-	for (let i = 0; i < endI; i += inc) {
-		const val = getDataBlock();
+	// pre-allocate the output so it doesn't have to grow (and re-copy) on every push
+	const { moment_data: momentData } = data;
+	momentData.length = data.gate_count;
+	const { offset, scale } = data;
+	for (let i = 0; i < data.gate_count; i += 1) {
+		const val = rawValues[i];
 		// per documentation 0 = below threshold, 1 = range folding
-		if (val >= 2) {
-			data.moment_data.push((val - data.offset) / data.scale);
-		} else {
-			data.moment_data.push(null);
-		}
+		momentData[i] = val >= 2 ? (val - offset) / scale : null;
 	}
 	return data;
 };
