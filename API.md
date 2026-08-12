@@ -36,6 +36,7 @@
         * [.readSignedInt()](#RandomAccessFile+readSignedInt) ⇒ <code>number</code>
         * [.readByte()](#RandomAccessFile+readByte) ⇒ <code>number</code>
         * [.read(length)](#RandomAccessFile+read) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
+        * [.readValues(count, byteLength)](#RandomAccessFile+readValues) ⇒ <code>Array.&lt;number&gt;</code>
     * _Positioning_
         * [.getLength()](#RandomAccessFile+getLength) ⇒ <code>number</code>
         * [.getPos()](#RandomAccessFile+getPos) ⇒ <code>number</code>
@@ -300,6 +301,7 @@ Internal function. Parses a Nexrad Level 2 Data archive or chunk. Provide `rawDa
         * [.readSignedInt()](#RandomAccessFile+readSignedInt) ⇒ <code>number</code>
         * [.readByte()](#RandomAccessFile+readByte) ⇒ <code>number</code>
         * [.read(length)](#RandomAccessFile+read) ⇒ <code>number</code> \| <code>Array.&lt;number&gt;</code>
+        * [.readValues(count, byteLength)](#RandomAccessFile+readValues) ⇒ <code>Array.&lt;number&gt;</code>
     * _Positioning_
         * [.getLength()](#RandomAccessFile+getLength) ⇒ <code>number</code>
         * [.getPos()](#RandomAccessFile+getPos) ⇒ <code>number</code>
@@ -384,6 +386,23 @@ Read a set number of bytes from the array
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | length | <code>number</code> | <code>1</code> | Number of bytes to read |
+
+<a name="RandomAccessFile+readValues"></a>
+
+### randomAccessFile.readValues(count, byteLength) ⇒ <code>Array.&lt;number&gt;</code>
+Read a run of fixed-width unsigned integers, advancing the pointer past all of them.
+Equivalent to calling readByte()/readShort() `count` times, but avoids the per-call
+overhead of those methods which matters when reading large gate arrays (radial moment
+data can total in the tens of millions of values for a single file).
+
+**Kind**: instance method of [<code>RandomAccessFile</code>](#RandomAccessFile)  
+**Returns**: <code>Array.&lt;number&gt;</code> - Array of values, length === count  
+**Category**: Data  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| count | <code>number</code> | Number of values to read |
+| byteLength | <code>number</code> | Byte length of each value, 1 or 2 |
 
 <a name="RandomAccessFile+getLength"></a>
 

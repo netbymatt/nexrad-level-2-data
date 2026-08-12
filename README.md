@@ -6,6 +6,7 @@
 A live demo showing the output of this library (via [nexrad-level-2-plot](https://www.github.com/netbymatt/nexrad-level-2-plot)) for select radar sites is available at https://nexrad-demo.netbymatt.com/
 
 ## Contents
+1. [Changes in v3.0.0](#changes-in-v300)
 1. [Changes in v2.0.0](#changes-in-v200)
 1. [Install](#install)
 1. [Usage](#usage)
@@ -15,6 +16,9 @@ A live demo showing the output of this library (via [nexrad-level-2-plot](https:
 1. [Supported Messages](#supported-messages)
 1. [Source Data Documentation](#source-data-documentation)
 1. [Acknowledgements](#acknowledgements)
+
+## Changes in v2.0.0
+v3.0.0 Changes to ESM and includes performance enhancements of ~30%
 
 ## Changes in v2.0.0
 

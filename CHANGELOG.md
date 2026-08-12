@@ -1,3 +1,7 @@
+## 3.0.0
+- Changed to esm
+- Performance improvements of ~30% by switching to native bzip2 code and reading in blocks instead of byte-wise
+
 ## 2.4.0
 - Changed all messages logged to console.warn(), or the matching custom logger if provided.
 ## v2.3.0
