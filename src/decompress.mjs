@@ -1,7 +1,8 @@
 // decompress a nexrad level 2 archive, or return the provided file if it is not compressed
 
-// bzip
-import bzip from 'seek-bzip';
+// bzip, wasm build of the real libbzip2 so decoding runs at native speed instead of
+// interpreted byte-at-a-time javascript
+import Bzip2 from '@foxglove/wasm-bz2';
 
 // gzip
 import gzipDecompress from './gzipdecompress.mjs';
@@ -12,12 +13,38 @@ import { RandomAccessFile, BIG_ENDIAN } from './classes/RandomAccessFile.mjs';
 // constants
 import { FILE_HEADER_SIZE } from './constants.mjs';
 
+// initialize the wasm module once for the lifetime of the process. this is a top-level
+// await which does mean this module (and anything that imports it) can only be consumed
+// via `import`/`import()`, not `require()` (node cannot require() an esm graph that
+// contains a top-level await)
+const bzip2 = await Bzip2.init();
+
 // compression header is (int) size of block + 'BZh' + one character block size
 const readCompressionHeader = (raf) => ({
 	size: raf.readInt(),
 	header: raf.readString(3),
 	block_size: raf.readString(1),
 });
+
+/**
+ * Decompress a single bzip2-compressed record. The exact decompressed size isn't known up
+ * front, so start with a generous guess (NEXRAD records have historically decompressed to
+ * roughly 3-4x their compressed size) and grow it if that guess turns out to be too small.
+ * @param {Uint8Array} compressed A single, complete bzip2 stream (starting with the 'BZh' magic)
+ * @returns {Uint8Array} Decompressed data
+ */
+const decompressBlock = (compressed) => {
+	let destSize = compressed.length * 6;
+	for (let attempt = 0; ; attempt += 1) {
+		try {
+			return bzip2.decompress(compressed, destSize, { small: false });
+		} catch (e) {
+			// BZ_OUTBUFF_FULL means destSize was too small, double it and try again
+			if (attempt >= 5 || !e.message.includes('BZ_OUTBUFF_FULL')) throw e;
+			destSize *= 2;
+		}
+	}
+};
 
 const decompress = (raf) => {
 	// detect gzip header
@@ -69,9 +96,10 @@ const decompress = (raf) => {
 
 	// loop through each block and decompress it
 	positions.forEach((block) => {
-		// extract the block from the array
-		const compressed = raf.array.slice(block.pos, block.pos + block.size);
-		const output = bzip.decodeBlock(compressed, 32); // skip 32 bits 'BZh9' header
+		// extract the block from the array, subarray avoids a copy since the wasm call
+		// copies the bytes into its own heap anyway
+		const compressed = raf.array.subarray(block.pos, block.pos + block.size);
+		const output = decompressBlock(compressed);
 		outArrays.push(output);
 	});
 

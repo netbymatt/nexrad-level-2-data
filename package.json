@@ -28,9 +28,6 @@
 	],
 	"author": "Matt Walsh",
 	"license": "MIT",
-	"dependencies": {
-		"seek-bzip": "^2.0.0"
-	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^9.39.5",
@@ -49,5 +46,8 @@
 	},
 	"allowScripts": {
 		"unrs-resolver@1.12.2": true
+	},
+	"dependencies": {
+		"@foxglove/wasm-bz2": "^0.3.0"
 	}
 }
