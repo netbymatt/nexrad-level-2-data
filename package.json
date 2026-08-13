@@ -1,6 +1,6 @@
 {
 	"name": "nexrad-level-2-data",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "Decode Nexrad Level II radar archive files",
 	"main": "./src/index.mjs",
 	"type": "module",
