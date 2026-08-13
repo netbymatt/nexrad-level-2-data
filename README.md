@@ -17,7 +17,7 @@ A live demo showing the output of this library (via [nexrad-level-2-plot](https:
 1. [Source Data Documentation](#source-data-documentation)
 1. [Acknowledgements](#acknowledgements)
 
-## Changes in v2.0.0
+## Changes in v3.0.0
 v3.0.0 Changes to ESM and includes performance enhancements of ~30%
 
 ## Changes in v2.0.0
