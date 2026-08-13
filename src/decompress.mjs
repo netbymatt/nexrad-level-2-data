@@ -26,22 +26,31 @@ const readCompressionHeader = (raf) => ({
 	block_size: raf.readString(1),
 });
 
+// a single compressed record decompressing to more than this indicates real data
+// corruption rather than just an undersized buffer guess, so give up at this point.
+// Well beyond the size of an entire volume, let alone a single record.
+const MAX_DEST_SIZE = 64 * 1024 * 1024;
+
 /**
  * Decompress a single bzip2-compressed record. The exact decompressed size isn't known up
- * front, so start with a generous guess (NEXRAD records have historically decompressed to
- * roughly 3-4x their compressed size) and grow it if that guess turns out to be too small.
+ * front, so start with a generous guess and grow it if that guess turns out to be too small.
+ * Radial gate data (the bulk of a file, by byte count) reliably decompresses to only 3-4x its
+ * compressed size, but small records like a chunk-mode volume header can be almost entirely
+ * padding and decompress at extreme, unpredictable ratios (one observed case: 238 bytes of
+ * input expanded to 325,888 bytes, a ~1370x ratio) - so the growth loop below has to be able to
+ * climb a long way past the initial guess, not just double a couple of times.
  * @param {Uint8Array} compressed A single, complete bzip2 stream (starting with the 'BZh' magic)
  * @returns {Uint8Array} Decompressed data
  */
 const decompressBlock = (compressed) => {
 	let destSize = compressed.length * 6;
-	for (let attempt = 0; ; attempt += 1) {
+	for (;;) {
 		try {
 			return bzip2.decompress(compressed, destSize, { small: false });
 		} catch (e) {
-			// BZ_OUTBUFF_FULL means destSize was too small, double it and try again
-			if (attempt >= 5 || !e.message.includes('BZ_OUTBUFF_FULL')) throw e;
-			destSize *= 2;
+			// BZ_OUTBUFF_FULL means destSize was too small, grow it and try again
+			if (destSize >= MAX_DEST_SIZE || !e.message.includes('BZ_OUTBUFF_FULL')) throw e;
+			destSize = Math.min(destSize * 4, MAX_DEST_SIZE);
 		}
 	}
 };
